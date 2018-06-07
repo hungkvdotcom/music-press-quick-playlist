@@ -114,7 +114,7 @@ function show_all_playlist()
                             </td>
                             <td class="shortcode-item" data-colname="shortcode">
                                 <code>
-                                    [music_press_quick_playlist id="<?php echo esc_attr($results->id); ?>"]
+                                    [music_press_quick_playlist id="<?php echo esc_attr($results->id); ?>" autoplay="yes"]
                                 </code>
                             </td>
                             <td class="number-of-songs column-number-of-songs" data-colname="songs_number">
@@ -294,19 +294,14 @@ function edit_playlist($id)
 
             <select name="parent" id="order" class="postform">
                 <option selected value="none"><?php echo esc_html__('Order', 'music-press-quick-playlist'); ?></option>
-                <option class="level-0"
-                        value="0"><?php echo esc_html__('DESC', 'music-press-quick-playlist'); ?></option>
-                <option class="level-0"
-                        value="1"><?php echo esc_html__('ASC', 'music-press-quick-playlist'); ?></option>
+                <option class="level-0" value="0"><?php echo esc_html__('DESC', 'music-press-quick-playlist'); ?></option>
+                <option class="level-0" value="1"><?php echo esc_html__('ASC', 'music-press-quick-playlist'); ?></option>
             </select>
 
             <select name="parent" id="orderby" class="postform">
-                <option selected
-                        value="none"><?php echo esc_html__('Order By', 'music-press-quick-playlist'); ?></option>
-                <option class="level-0"
-                        value="0"><?php echo esc_html__('Date', 'music-press-quick-playlist'); ?></option>
-                <option class="level-0"
-                        value="1"><?php echo esc_html__('Plays', 'music-press-quick-playlist'); ?></option>
+                <option selected value="none"><?php echo esc_html__('Order By', 'music-press-quick-playlist'); ?></option>
+                <option class="level-0" value="0"><?php echo esc_html__('Date', 'music-press-quick-playlist'); ?></option>
+                <option class="level-0" value="1"><?php echo esc_html__('Plays', 'music-press-quick-playlist'); ?></option>
             </select>
 
             <input type="text" name="playlist_title" size="30" value="" id="filter_limit" spellcheck="true"
@@ -317,6 +312,12 @@ function edit_playlist($id)
             </button>
 
         </div>
+        <div id="searchfield">
+            <h3 class="sbsn"><?php echo esc_html__('Search by song name:','tdm'); ?></h3>
+            <form>
+                <input type="text" name="songautocomplete" class="biginput" id="autocomplete">
+            </form>
+        </div><!-- @end #searchfield -->
         <div id="contentwrap">
             <div class="leftcontent">
                 <ul class="mp-list">
@@ -391,6 +392,50 @@ function edit_playlist($id)
             </div>
         </div>
     </div>
+    <script>
+
+        $(function () {
+
+            function duplicatedataid() {
+                $('att').each(function (i) {
+                    $('[id="' + this.id + '"]').slice(1).remove();
+                });
+            }
+            var songarray = [
+                // list songs
+                <?php
+                $query_args = array(
+                    'post_type' => 'mp_song',
+                    'post_status' => 'publish',
+                    'ignore_sticky_posts' => 1,
+                    'order' => 'title',
+                    'orderby' => 'DESC',
+                    'posts_per_page' => '',
+                );
+                $songs = new WP_Query($query_args);
+                if ($songs->have_posts()) : ?>
+
+                <?php
+                while ($songs->have_posts()) : $songs->the_post();
+                ?>
+                {value: '<?php the_title(); ?>', data: '<?php the_ID(); ?>'},
+                <?php
+                endwhile;
+                endif
+                ?>
+            ];
+            $('#autocomplete').autocomplete({
+                lookup: songarray,
+                onSelect: function (suggestion) {
+                    var thehtml = '<li data-id="' + suggestion.data + '" class="playlist_item">' + suggestion.value + '</li>';
+                    $('#list-added').append(thehtml);
+                    $('#searchfield input').val('');
+                }
+            });
+
+        });
+    </script>
+
     <?php
     return;
 }

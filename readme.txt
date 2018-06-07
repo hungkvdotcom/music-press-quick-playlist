@@ -1,7 +1,7 @@
 === User profile ===
-	Contributors: tuyennv
+	Contributors: hungkvdotcom
 	Donate link: https://wpmusicpress.com/
-	Tags:  music press, member profile, music member
+        Tags:  music press, quick playlist, music member
 	Requires at least: 4.1
 	Tested up to: 4.9.5
 	Stable tag: 2.0.10

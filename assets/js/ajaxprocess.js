@@ -11,7 +11,8 @@
             $('.rightcontent .mp-listed li.selected').removeClass('selected');
         });
         $('#clear_data').click(function () {
-            $('.rightcontent .mp-listed li.selected').appendTo('.mp-list');
+            var li_select = $('.rightcontent .mp-listed li.selected');
+            li_select.appendTo('.mp-list');
             $('.leftcontent .mp-list li.selected').removeClass('selected');
         });
 
@@ -28,7 +29,14 @@
         var nofication_added = $(".nofication__added");
         nofication_added.hide();
         nofication_songnull.hide();
+        function removedataid() {
+            $('#list-added').find('li').each(function () {
+                var theID = $(this).data("id");
+                $("li[data-id='" + theID + "']").slice(1).remove();
+            });
+        }
         $('.music-press-quick-playlist-wrap #msqp-publishing-action #publish').click(function () {
+            removedataid();
             var playlist_title = $("#playlist_title").val();
             var eduarray = {};
             eduarray = [];
@@ -137,6 +145,7 @@
 
         //    Delete single playlist
         $('#replace_playlist #publish').click(function () {
+            removedataid();
             var get_id_replace = $('#replace_playlist').attr('data-replace-id'),
                 replace_get_title = $('#playlist_title').val(),
                 song_is_null = $('#playlist_title').val(),

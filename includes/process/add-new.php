@@ -100,6 +100,7 @@
 
     </div>
     <div id="searchfield">
+        <h3 class="sbsn"><?php echo esc_html__('Search by song name:','tdm'); ?></h3>
         <form>
             <input type="text" name="songautocomplete" class="biginput" id="autocomplete">
         </form>
@@ -164,7 +165,14 @@
     </div>
 </div>
 <script>
+
     $(function () {
+
+        function duplicatedataid() {
+            $('att').each(function (i) {
+                $('[id="' + this.id + '"]').slice(1).remove();
+            });
+        }
         var songarray = [
             // list songs
             <?php
@@ -188,11 +196,10 @@
             endif
             ?>
         ];
-
         $('#autocomplete').autocomplete({
             lookup: songarray,
             onSelect: function (suggestion) {
-                var thehtml = '<li data-id="' + suggestion.value + '" class="playlist_item">' + suggestion.value + '</li>';
+                var thehtml = '<li data-id="' + suggestion.data + '" class="playlist_item">' + suggestion.value + '</li>';
                 $('#list-added').append(thehtml);
                 $('#searchfield input').val('');
             }
